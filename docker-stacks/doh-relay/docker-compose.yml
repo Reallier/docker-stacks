@@ -1,0 +1,23 @@
+---
+version: "3"
+services:
+  caddy:
+    restart: always
+    image: caddy
+    ports:
+      - 12443:443
+      - 12443:443/udp
+    volumes:
+      - ${PWD}/caddy:/etc/caddy
+      - ${PWD}/certs:${PWD}/certs
+      # 接下来是配置文件缓存
+      - ./autosave.json:/config/caddy/autosave.json
+    environment:
+      - CUR_WORK_DIR=${PWD}
+
+  acmesh:
+    restart: always
+    image: neilpang/acme.sh
+    command: daemon
+    volumes:
+      - ${PWD}/certs:/acme.sh

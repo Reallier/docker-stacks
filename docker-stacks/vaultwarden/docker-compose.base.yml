@@ -1,0 +1,30 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server
+    restart: always
+    volumes:
+      - ./vaultwarden/data:/data
+    networks:
+      - default
+    environment:
+      - WEBSOCKET_ENABLED=true # Required to use websockets
+      - ADMIN_TOKEN=
+      - SIGNUPS_ALLOWED=true # set to false to disable signups
+      - DATABASE_URL=${DB_TYPE}://${DB_USERNAME}:${DB_PASSWD}@${DB_HOST}/${DB_NAME}
+  postgresql:
+    image: percona/percona-distribution-postgresql:16-multi
+    restart: always
+    networks:
+      - default
+    environment:
+      - POSTGRES_PASSWORD=${DB_ROOT_PASSWD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # - ${PWD}/postgresql/data:/var/lib/postgresql/data
+      - ${PWD}/postgresql/data:/data/db
+      # - ${PWD}/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
+
+networks:
+  default:
+    name: cloudflared
+    external: true

@@ -1,0 +1,15 @@
+(cors) {
+	@origin header Origin {args.0}
+	header @origin Access-Control-Allow-Origin "{args.0}"
+	header @origin Access-Control-Allow-Methods "OPTIONS,HEAD,GET,POST,PUT,PATCH,DELETE"
+}
+
+(site-log) {
+    log {
+		output file {$CUR_WORK_DIR}/wwwlogs/{args.0}.log {
+			roll_size 50mb
+			roll_keep 7
+			roll_keep_for 36h
+		}
+	}
+}

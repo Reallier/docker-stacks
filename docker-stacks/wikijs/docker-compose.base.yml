@@ -1,0 +1,26 @@
+version: "3"
+services:
+  wiki:
+    image: requarks/wiki:2
+    container_name: wikijs
+    restart: always
+    volumes:
+      - "./wikijs/data:/wiki/data"
+      - "./wikijs/config.yml:/wiki/config.yml"
+    healthcheck:
+      test: curl -s http://localhost:3000 >/dev/null; if [[ $$? == 52 ]]; then echo 0; else echo 1; fi
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  postgresql:
+    image: percona/percona-distribution-postgresql:16-multi
+    restart: always
+    networks:
+      - default
+    environment:
+      - POSTGRES_PASSWORD=${DB_ROOT_PASSWD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # - ${PWD}/postgresql/data:/var/lib/postgresql/data
+      - ${PWD}/postgresql/data:/data/db
+      # - ${PWD}/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf

@@ -1,0 +1,14 @@
+https://doh1.example.com {
+	encode gzip zstd
+	tls {$CUR_WORK_DIR}/certs/example.com/fullchain.cer {$CUR_WORK_DIR}/certs/example.com/example.com.key
+	# 这里要代理特定路径
+	route /dns-query/* {
+		reverse_proxy https://1.1.1.1 {
+             header_up Host "1.1.1.1"
+		}
+	}
+	route * {
+		error * "Not found" 404
+	}
+	import site-log doh1.example.com
+}

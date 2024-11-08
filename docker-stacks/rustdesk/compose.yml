@@ -1,0 +1,9 @@
+services:
+  rustdesk-hbbr:
+    container_name: resilio-sync
+    restart: always
+    image: rustdesk/rustdesk-server
+    network_mode: host
+    command: hbbs -r a.b.c.d
+    volumes:
+      - /data:/data
